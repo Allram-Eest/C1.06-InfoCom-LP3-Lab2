@@ -13,7 +13,7 @@ app.secret_key = 'dljsaklqk24e21cjn!Ew@@dsa5'
 
 # change this to connect to your redis server
 # ===============================================
-redis_server = redis.Redis("REDIS_SERVER", decode_responses=True, charset="unicode_escape")
+redis_server = redis.Redis("localhost", decode_responses=True, charset="unicode_escape", port=7777)
 # ===============================================
 
 geolocator = Nominatim(user_agent="my_request")
@@ -46,12 +46,32 @@ def route_planner():
         # Here you need to find a drone that is availale from the database. You need to check the status of the drone, there are two status, 'busy' or 'idle', only 'idle' drone is available and can be sent the coords to run delivery
         # 1. Find avialable drone in the database
         # if no drone is availble:
-        message = 'No available drone, try later'
-        # else:
-            # 2. Get the IP of available drone, 
-        DRONE_URL = 'http://' + DRONE_IP+':5000'
-            # 3. Send coords to the URL of available drone
-        message = 'Got address and sent request to the drone'
+        drone1_status = redis_server.get('DRONE_1_status')
+        drone2_status = redis_server.get('DRONE_2_status')
+        if drone1_status=='busy' and drone2_status=='busy':
+            message = 'No available drone, try later'
+        else: 
+            if drone1_status=='idle':
+                DRONE_IP = redis_server.get('DRONE_1_IP')
+                DRONE_ID = "DRONE_1"
+            else:
+                DRONE_IP = redis_server.get('DRONE_2_IP')
+                DRONE_ID = "DRONE_2"
+            DRONE_URL = 'http://' + DRONE_IP+':5000'
+            message = 'Get addresses! Send to Drone'
+            current_location = (redis_server.get(DRONE_ID+'_longitude').decode(), redis_server.get(DRONE_ID+'_latitude').decode())
+            coords = {'current': (current_location[0],current_location[1]),
+                      'from': (from_location.longitude, from_location.latitude),
+                      'to': (to_location.longitude, to_location.latitude),
+                      }
+            try:
+                with requests.session() as session:
+                    resp = session.post(DRONE_URL, json=coords)
+                    print(resp.text)
+                return message
+            except Exception as e:
+                print(e)
+                return "Could not connect to the drone, please try again"
     return message
         # ======================================================================
 

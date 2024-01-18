@@ -16,8 +16,8 @@ myID = "DRONE_ID"
 
 # Get initial longitude and latitude the drone
 #===================================================================
-current_longitude = 0
-current_latitude = 0
+current_longitude = 13.21008
+current_latitude = 55.71106
 #===================================================================
 
 drone_info = {'id': myID,
@@ -28,7 +28,7 @@ drone_info = {'id': myID,
 
 # Fill in the IP address of server, and send the initial location of the drone to the SERVER
 #===================================================================
-SERVER="http://SERVER_IP:PORT/drone"
+SERVER="http://1.2.3.2:5001/drone"
 with requests.Session() as session:
     resp = session.post(SERVER, json=drone_info)
 #===================================================================
@@ -38,8 +38,8 @@ def main():
     coords = request.json
     # Get current longitude and latitude of the drone 
     #===================================================================
-    current_longitude = 0
-    current_latitude = 0
+    current_longitude = coords['current'][0]
+    current_latitude = coords['current'][1]
     #===================================================================
     from_coord = coords['from']
     to_coord = coords['to']
