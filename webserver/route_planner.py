@@ -59,7 +59,7 @@ def route_planner():
                 DRONE_ID = "DRONE_2"
             DRONE_URL = 'http://' + DRONE_IP+':5000'
             message = 'Get addresses! Send to Drone'
-            current_location = (redis_server.get(DRONE_ID+'_longitude').decode(), redis_server.get(DRONE_ID+'_latitude').decode())
+            current_location = (redis_server.get(DRONE_ID+'_longitude'), redis_server.get(DRONE_ID+'_latitude'))
             coords = {'current': (current_location[0],current_location[1]),
                       'from': (from_location.longitude, from_location.latitude),
                       'to': (to_location.longitude, to_location.latitude),

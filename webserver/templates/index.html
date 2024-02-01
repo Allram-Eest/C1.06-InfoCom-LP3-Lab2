@@ -25,7 +25,7 @@
           }
         }
       };
-      xhttp.open("POST", "http://127.0.0.1:5002/planner", true);
+      xhttp.open("POST", "http://1.2.3.1:5002/planner", true);
       xhttp.send(JSON.stringify(data));
     }
   </script>
@@ -71,10 +71,10 @@
   </form>
   <object id="map" data="static/images/lund-map.svg" type="image/svg+xml" ></object>
   <script>
-    var set_delay = 50,
+    var set_delay = 500,
     callout = function () {
     $.ajax({
-      url: 'http://0.0.0.0:5000/get_drones'
+      url: '/get_drones'
     })
     .done(function (server_response) {
       var avalaible_drones = Object.keys(server_response)

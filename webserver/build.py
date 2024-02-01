@@ -63,7 +63,7 @@ def get_drones():
     drone2_status = redis_server.get('DRONE_2_status')
     
     drone_dict = {'DRONE_1':{'longitude': drone1_longitude_svg, 'latitude': drone1_latitude_svg, 'status': drone1_status},
-                  'DRONE_2': {'longitude': drone2_longitude_svg, 'latitude': drone2_latitude_svg, 'status': drone2_status}
+                  'DRONE_2': {'longitude': drone2_longitude_svg, 'latitude': drone2_latitude_svg, 'status': drone2_status}}
     return jsonify(drone_dict)
 
 if __name__ == "__main__":
